@@ -30,6 +30,11 @@ func main() {
 
 	//url := func(url, path string) string { return fmt.Sprintf("%s/%s/%s", url, apiVersion, path) }
 
+	app.Get("manage/health", func(ctx *fiber.Ctx) error {
+		ctx.Status(fiber.StatusOK)
+		return nil
+	})
+
 	v1 := app.Group(apiVersion)
 	{
 		//v1.Get("flights", proxy.Forward(url(cfg.Service.FlightUrl, "flights")))
