@@ -22,10 +22,6 @@ func main() {
 	}
 	defer db.Close()
 
-	if err = db.Ping(); err != nil {
-		panic(err)
-	}
-
 	repo := repository.NewSqlRepository(db)
 
 	svc := service.NewService(repo)
