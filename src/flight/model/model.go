@@ -19,11 +19,11 @@ type Flight struct {
 }
 
 type FlightResponse struct {
-	FlightNumber string `json:"flightNumber,omitempty"` // Номер полета
-	FromAirport  string `json:"fromAirport,omitempty"`  // Страна и аэропорт прибытия
-	ToAirport    string `json:"toAirport,omitempty"`    // Страна и аэропорт прибытия
-	Date         string `json:"date,omitempty"`         // Дата и время вылета
-	Price        int32  `json:"price,omitempty"`        // Стоимость
+	FlightNumber string    `json:"flightNumber,omitempty"` // Номер полета
+	FromAirport  string    `json:"fromAirport,omitempty"`  // Страна и аэропорт прибытия
+	ToAirport    string    `json:"toAirport,omitempty"`    // Страна и аэропорт прибытия
+	Date         time.Time `json:"date,omitempty"`         // Дата и время вылета
+	Price        int32     `json:"price,omitempty"`        // Стоимость
 }
 
 type PaginationResponse struct {

@@ -10,7 +10,7 @@ import (
 
 type Querier interface {
 	GetAirport(ctx context.Context, id int32) (Airport, error)
-	GetFlight(ctx context.Context, id int32) (Flight, error)
+	GetFlight(ctx context.Context, flightNumber string) (Flight, error)
 	ListAirports(ctx context.Context) ([]Airport, error)
 	ListFlights(ctx context.Context) ([]Flight, error)
 	ListFlightsWithOffsetLimit(ctx context.Context, arg ListFlightsWithOffsetLimitParams) ([]Flight, error)

@@ -1,10 +1,12 @@
 package server
 
 import (
-	"app/flight/config"
-	"app/flight/controller"
-	"app/flight/service"
-	"app/pkg/server"
+	"flight/config"
+	"flight/controller"
+	"flight/service"
+	"net/http"
+
+	"github.com/lnq99/rsoi-2022-lab2-microservices-lnq99/src/pkg/server"
 
 	limits "github.com/gin-contrib/size"
 	"github.com/gin-gonic/gin"
@@ -24,7 +26,7 @@ func NewGinServer(service service.Service, cfg *config.ServerConfig) server.Serv
 	// Middleware
 	engine.Use(gin.Logger())
 	engine.Use(gin.Recovery())
-	engine.Use(limits.RequestSizeLimiter(10))
+	engine.Use(limits.RequestSizeLimiter(1000))
 
 	ctrl := controller.NewGinController(service)
 	s := GinServer{
@@ -39,7 +41,10 @@ func NewGinServer(service service.Service, cfg *config.ServerConfig) server.Serv
 func (s *GinServer) SetupRouter() {
 	r := s.engine
 	r.GET("/api/v1/flights", s.handlers.ListFlights)
-	//r.GET("/api/v1/flights/:id", s.handlers.GetFlight)
+	r.GET("/api/v1/flights/:flightNumber", s.handlers.GetFlight)
+	r.GET("/manage/health", func(c *gin.Context) {
+		c.Status(http.StatusOK)
+	})
 }
 
 func (s *GinServer) Run() {

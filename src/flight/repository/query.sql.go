@@ -11,7 +11,7 @@ import (
 
 const getAirport = `-- name: GetAirport :one
 SELECT id, name, city, country FROM airport
-WHERE id = $1 LIMIT 1
+WHERE id=$1 LIMIT 1
 `
 
 func (q *Queries) GetAirport(ctx context.Context, id int32) (Airport, error) {
@@ -28,11 +28,11 @@ func (q *Queries) GetAirport(ctx context.Context, id int32) (Airport, error) {
 
 const getFlight = `-- name: GetFlight :one
 SELECT id, flight_number, datetime, from_airport_id, to_airport_id, price FROM flight
-WHERE id = $1 LIMIT 1
+WHERE flight_number=$1 LIMIT 1
 `
 
-func (q *Queries) GetFlight(ctx context.Context, id int32) (Flight, error) {
-	row := q.db.QueryRowContext(ctx, getFlight, id)
+func (q *Queries) GetFlight(ctx context.Context, flightNumber string) (Flight, error) {
+	row := q.db.QueryRowContext(ctx, getFlight, flightNumber)
 	var i Flight
 	err := row.Scan(
 		&i.ID,

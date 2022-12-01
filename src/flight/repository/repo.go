@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"app/flight/config"
 	"database/sql"
+	"flight/config"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 )

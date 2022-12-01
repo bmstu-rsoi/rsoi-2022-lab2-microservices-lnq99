@@ -1,11 +1,11 @@
 package main
 
 import (
-	"app/flight/config"
-	"app/flight/repository"
-	"app/flight/server"
-	"app/flight/service"
 	"database/sql"
+	"flight/config"
+	"flight/repository"
+	"flight/server"
+	"flight/service"
 )
 
 func main() {

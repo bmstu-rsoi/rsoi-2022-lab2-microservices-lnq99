@@ -1,26 +1,27 @@
 package service
 
 import (
-	"app/flight/model"
-	"app/flight/repository"
 	"context"
+	"flight/model"
+	"flight/repository"
 )
 
 type Service interface {
-	ListFlights(ctx context.Context, page, size int32) model.PaginationResponse
+	GetFlight(ctx context.Context, flightNumber string) *model.FlightResponse
+	ListFlights(ctx context.Context, page, size int32) *model.PaginationResponse
 }
 
-type ServiceImpl struct {
+type serviceImpl struct {
 	repo repository.Repo
 }
 
 var airportMap = make(map[int32]model.Airport)
 
 func NewService(repo repository.Repo) Service {
-	return &ServiceImpl{repo: repo}
+	return &serviceImpl{repo: repo}
 }
 
-func (s *ServiceImpl) ListFlights(ctx context.Context, page, size int32) model.PaginationResponse {
+func (s *serviceImpl) ListFlights(ctx context.Context, page, size int32) *model.PaginationResponse {
 	//flight := s.repo.SelectFlightsWithOffsetLimit((page-1)*size, size)
 
 	res := model.PaginationResponse{
@@ -34,7 +35,7 @@ func (s *ServiceImpl) ListFlights(ctx context.Context, page, size int32) model.P
 		repository.ListFlightsWithOffsetLimitParams{size, (page - 1) * size})
 
 	if err != nil {
-		return res
+		return &res
 	}
 
 	res.TotalElements = int32(len(flights))
@@ -47,17 +48,35 @@ func (s *ServiceImpl) ListFlights(ctx context.Context, page, size int32) model.P
 		}
 		res.Items = append(res.Items, model.FlightResponse{
 			FlightNumber: f.FlightNumber,
-			FromAirport:  fromAirport.Name + " " + fromAirport.City,
-			ToAirport:    toAirport.Name + " " + fromAirport.City,
-			Date:         f.Datetime.String(),
+			FromAirport:  fromAirport.City + " " + fromAirport.Name,
+			ToAirport:    toAirport.City + " " + toAirport.Name,
+			Date:         f.Datetime,
 			Price:        f.Price,
 		})
 	}
 
-	return res
+	return &res
 }
 
-func (s *ServiceImpl) loadAirport(ctx context.Context, id int32) *model.Airport {
+func (s *serviceImpl) GetFlight(ctx context.Context, flightNumber string) *model.FlightResponse {
+	f, err := s.repo.GetFlight(ctx, flightNumber)
+	if err != nil {
+		return nil
+	}
+
+	fromAirport := s.loadAirport(ctx, f.FromAirportID)
+	toAirport := s.loadAirport(ctx, f.ToAirportID)
+
+	return &model.FlightResponse{
+		FlightNumber: f.FlightNumber,
+		FromAirport:  fromAirport.City + " " + fromAirport.Name,
+		ToAirport:    toAirport.City + " " + toAirport.Name,
+		Date:         f.Datetime,
+		Price:        f.Price,
+	}
+}
+
+func (s *serviceImpl) loadAirport(ctx context.Context, id int32) *model.Airport {
 	airport, ok := airportMap[id]
 	if !ok {
 		newAirport, err := s.repo.GetAirport(ctx, id)

@@ -1,16 +1,16 @@
 package controller
 
 import (
-	"app/flight/service"
-	errors "app/pkg/error"
+	"flight/service"
 	"net/http"
 
-	"app/pkg/util"
+	errors "github.com/lnq99/rsoi-2022-lab2-microservices-lnq99/src/pkg/error"
+
+	"github.com/lnq99/rsoi-2022-lab2-microservices-lnq99/src/pkg/util"
 
 	"github.com/gin-gonic/gin"
 )
 
-// GinController converts gin contexts to parameters.
 type GinController struct {
 	service service.Service
 }
@@ -28,5 +28,12 @@ func (c *GinController) ListFlights(ctx *gin.Context) {
 	}
 
 	r := c.service.ListFlights(ctx, int32(page), int32(size))
+	ctx.JSON(http.StatusOK, r)
+}
+
+func (c *GinController) GetFlight(ctx *gin.Context) {
+	flightNumber := ctx.Param("flightNumber")
+
+	r := c.service.GetFlight(ctx, flightNumber)
 	ctx.JSON(http.StatusOK, r)
 }

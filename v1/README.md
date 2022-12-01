@@ -184,16 +184,16 @@ airport:
     name: Шереметьево
     city: Москва
     country: Россия
-  - id: 2
-    name: Пулково
-    city: Санкт-Петербург
-    coutry: Россия
+    - id: 2
+      name: Пулково
+      city: Санкт-Петербург
+      coutry: Россия
 
 flight:
   - id: 1
     flight_number: "AFL031"
     datetime: "2021-10-08 20:00"
-    from_airport_id: 1
-    to_airport_id: 2
+    from_airport_id: 2
+    to_airport_id: 1
     price: 1500
 ```
